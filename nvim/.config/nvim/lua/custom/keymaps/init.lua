@@ -46,4 +46,5 @@ return {
 		"<CMD>DagsterSwitchTransformationAndAsset<CR>",
 		{ desc = "Switch between Asset and Transformation" }
 	),
+	map("n", "<leader>cdm", "<CMD>DagsterMaterialise<CR>", { desc = "Materialise asset under cursor" }),
 }

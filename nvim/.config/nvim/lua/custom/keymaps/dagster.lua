@@ -49,7 +49,22 @@ local function switch_asset_transformation()
 	end
 end
 
+local function materialize_asset()
+	if vim.env.TMUX == nil then
+		print("DagsterMaterialise requires nvim to be running inside tmux")
+		return
+	end
+
+	local asset_name = vim.fn.expand("<cword>")
+	local cwd = vim.fn.getcwd()
+	-- `exec $SHELL` keeps the window open after `mat` exits so output/errors stay visible
+	local shell_cmd = "uv run --env-file .env.local mat " .. vim.fn.shellescape(asset_name) .. "; exec $SHELL"
+
+	vim.fn.system({ "tmux", "split-window", "-v", "-c", cwd, shell_cmd })
+end
+
 vim.api.nvim_create_user_command("DagsterSwitchTransformationAndAsset", switch_asset_transformation, {})
 vim.api.nvim_create_user_command("DagsterGoToAsset", goto_asset, {})
 vim.api.nvim_create_user_command("DagsterGoToAssetProd", goto_asset_prod, {})
+vim.api.nvim_create_user_command("DagsterMaterialise", materialize_asset, {})
 return {}
